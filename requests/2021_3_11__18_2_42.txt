@@ -1,0 +1,4 @@
+>User_Email
+nhoxkhang351@gmail.com
+>Fasta sequences:
+GAUAAAAGAGUUACUUUGAUA
