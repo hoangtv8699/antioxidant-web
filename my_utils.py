@@ -1,16 +1,41 @@
 import datetime
 import os
+import re
 import math
 import tensorflow as tf
 import pandas as pd
 import numpy as np
+import subprocess
+from Bio import SeqIO
 from joblib import dump, load
 from tensorflow.keras import backend as K
-from tensorflow.keras.preprocessing import sequence
+from tensorflow.keras.preprocessing import sequence as seq
 from transformers import BertModel, BertTokenizer
+
+from flask import Flask, url_for
+from flask_mail import Mail, Message
+from main import app
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'sktt1nhox99@gmail.com'
+app.config['MAIL_PASSWORD'] = 'tranvanhoang99'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
+
 
 DIR_REQUESTS = "requests/"
 DIR_RESPONSES = "responses/"
+
+DIR_PSSM = 'data/pssm/'
+DIR_BERT = 'data/bert/'
+DIR_SEQ = 'data/sequences/'
+
+DIR_MODEL_CNN = 'models/3518/'
+DIR_MODEL_RF = 'models/RFtop1.joblib'
+DIR_MODEL_DCT = 'models/DCT.joblib'
+
 
 def create_file_name():
     currentDT = datetime.datetime.now()
@@ -27,33 +52,62 @@ def create_file_name():
     return result
 
 
-def save_request_problem(fasta_seq, email):
-    file_name = create_file_name() + ".txt"
+def save_request_problem(fasta_seq, email, name):
+    file_name = name + ".txt"
     file_path = DIR_REQUESTS + file_name
     print(file_path)
 
     f_request = open(file_path, "w")
-    f_request.write(">User_Email\n")
+    f_request.write(">email\n")
     f_request.write(email + "\n")
-    f_request.write(">Fasta sequences:\n")
+    f_request.write(">seq\n")
     f_request.write(fasta_seq)
     f_request.close()
 
 
+def save_result_problem(fasta_seq, email, name, result):
+    file_path = DIR_RESPONSES + name + '.fasta'
+    print(file_path)
+
+    f_request = open(file_path, "w")
+    f_request.write(">email\n")
+    f_request.write(email + "\n")
+    f_request.write(">seq\n")
+    f_request.write(fasta_seq + "\n")
+    f_request.write(">result\n")
+    if result == 1:
+        f_request.write("Antioxidant")
+    else:
+        f_request.write("Non-Antioxidant")
+    f_request.close()
+
+
+def send_result_ready(email, link):
+    msg = Message('Result ready', sender='sktt1nhox99@gmail.com', recipients=[email])
+    msg.body = "Hello,\n" +\
+        "your result checking antioxidant protein have been done!. you can click this link to see the result\n" +\
+        link
+    mail.send(msg)
+    print('email sent!')
+
+
 def read_response_problem(file_name):
-    # file_name = "2019_8_19__12_5_47_problem2.txt"
     response_status = True
 
-    file_path = DIR_RESPONSES + file_name
+    file_path = DIR_RESPONSES + file_name + '.fasta'
     if not os.path.exists(file_path):
-        return False, ""
+        return False, None
 
-    result = "RESULT"
-    f = open(file_path, "r")
-    result = f.readlines()
-    f.close()
+    result = {
+        'email': '',
+        'seq': '',
+        'result': ''
+    }
 
-    result = "<br>" + '<br>'.join(result)
+    with open(file_path) as handle:
+        for record in SeqIO.parse(handle, "fasta"):
+            result[record.id] = str(record.seq)
+
     return response_status, result
 
 
@@ -76,7 +130,7 @@ def read_pssm(path):
     data = pd.read_csv(path, sep=',', header=None)
     data = np.asarray(data)
     data = normalize(data.T)
-    data = sequence.pad_sequences(data, maxlen=400, padding='post', truncating='post')
+    data = seq.pad_sequences(data, maxlen=400, padding='post', truncating='post')
     return data
 
 
@@ -107,13 +161,13 @@ def voting(models, data):
     return pre
 
 
-def ensemble(model_cnn_path, model_rf_path, data_pssm_path, data_bert_path):
+def ensemble(data_pssm_path, data_bert_path):
     # load models
-    model_cnn_paths = os.listdir(model_cnn_path)
+    model_cnn_paths = os.listdir(DIR_MODEL_CNN)
     models_cnn = []
     for model_path in model_cnn_paths:
-        models_cnn.append(tf.keras.models.load_model(model_cnn_path + model_path, compile=False))
-    model_rf = load(model_rf_path)
+        models_cnn.append(tf.keras.models.load_model(DIR_MODEL_CNN + model_path, compile=False))
+    model_rf = load(DIR_MODEL_RF)
 
     data_pssm = read_pssm(data_pssm_path)
     data_bert = read_bert(data_bert_path)
@@ -144,7 +198,8 @@ tokenizer = BertTokenizer.from_pretrained("Rostlab/prot_bert", do_lower_case=Fal
 model = BertModel.from_pretrained("Rostlab/prot_bert")
 
 
-def seg2bert(sequence, model_dct_path, save_path):
+def seq2bert(sequence, model_dct_path, filename):
+    save_path = DIR_BERT + filename + '.csv'
     top1 = get_top(model_dct_path, 1)
     sequence = format_seq(sequence)
     encoded_input = tokenizer(sequence[0:1200], return_tensors='pt')
@@ -152,10 +207,60 @@ def seg2bert(sequence, model_dct_path, save_path):
     output = output.last_hidden_state.detach().numpy()[0].T
     output = output[top1]
     pd.DataFrame(output).to_csv(save_path, header=None, index=False)
+    return save_path
 
 
-def seg2pssm(sequence, save_path):
-    a = 10
+def seg2pssm(sequence, filename):
+    seq_name = DIR_SEQ + filename + '.txt'
+    save_path = DIR_PSSM + filename + '.csv'
+
+    f = open(seq_name, 'w')
+    f.write(sequence)
+    f.close()
+
+    command = ['./ncbi-blast-2.9.0+/bin/psiblast', '-db', 'ncbi-blast-2.9.0+/bin/db/swissprot',
+               '-evalue', '0.01', '-query', seq_name, '-out_ascii_pssm', save_path,
+               '-num_iterations', '3', '-num_threads', '6']
+
+    # command[6] = seq_name
+    # command[8] = save_path
+    process = subprocess.run(command)
+
+    with open(save_path) as fd:
+            content = fd.readlines()[3:-6]
+    # you may also want to remove whitespace characters like `\n` at the end of each line
+    content = [x.strip() for x in content]
+    # with open(_path + 'csv/' + pssm_file.replace("fasta", "csv"), 'w') as wfd:
+    with open(save_path, 'w') as wfd:
+        for index, line in enumerate(content):
+            line = line[6:-92].strip()  # line[6:-92].strip() for only PSSM
+            line = re.sub(r' +', ',', line)
+            # csvLine = sequence[index] + ',' + line    # include label as first column
+            csvLine = line
+            # validity check
+            cnt = csvLine.count(',')
+            if cnt != 19:  # 20 for just PSSM, 42 for all, 19 for just PSSM and not include label
+                isValid = False
+            # print(csvLine)
+            # write to csv files
+            wfd.write(csvLine + '\n')
+    return save_path
+
+
+def preprocess(sequence):
+    filename = create_file_name()
+    pssm_path = seg2pssm(sequence, filename)
+    bert_path = seq2bert(sequence, DIR_MODEL_DCT, filename)
+    return pssm_path, bert_path
+
+
+def process(sequence, email):
+    name = create_file_name()
+    save_request_problem(sequence, email, name)
+    pssm_path, bert_path = preprocess(sequence)
+    result = ensemble(pssm_path, bert_path)
+    save_result_problem(sequence, email, name, result)
+    return name
 
 
 if __name__ == "__main__":
@@ -164,14 +269,11 @@ if __name__ == "__main__":
     # user_email = "abc@123"
     # save_request_problem(fasta_seq, user_email)
 
-    model_cnn_path = 'models/3518/'
-    model_rf_path = 'models/RFtop1.joblib'
-    data_pssm_path = 'data/pssm/121_0_test.csv'
-    data_bert_path = 'data/bert/test2.csv'
-    result = ensemble(model_cnn_path, model_rf_path, data_pssm_path, data_bert_path)
-    print(result)
-
-    # model_dct_path = 'models/DCT.joblib'
     # sequence = 'MRSPSLAVAATTVLGLFSSSALAYYGNTTTVALTTTEFVTTCPYPTTFTVSTCTNDVCQPTVVTVTEETTITIPGTVVCPVVSTPSGSASASASAGASSEEEGSVVTTQVTVTDFTTYCPYPTTLTITKCENNECHPTTIPVETATTVTVTGEVICPTTTSTSPKESSSEAASSEVITTQVTVTDYTTYCPLPTTIVVSTCDEEKCHPTTIEVSTPTTVVVPGTVVCPTTSVATPSQSEVATKPTTINSVVTTGVTTTDYTTYCPSPTTIVVSTCDEEKCHPTTIEVSTPTTVVVPGTVVHPSTSATIITTTAEQPPASPEVSTIESVVTTPATLTGYTTYCPEPTTIVLTTCSDDQCKPHTVSATGGETVSIPATIVVPSSHTTQVEITVSSASVPASEKPTTPVTVAAVSSSPAVSTETPSLVTPAISIAGAAAVNVVPTTAFGLFAIILASIF'
-    # seg2bert(sequence, model_dct_path, 'data/bert/test2.csv')
+    # process(sequence, 'abc@gmail.com')
 
+    with app.app_context():
+        send_result_ready('nhoxkhang351@gmail.com', url_for('result', filename='test'))
+
+    # response, result = read_response_problem('example')
+    # print(result)
