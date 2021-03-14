@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+	<title>Home</title>
+	<link rel="stylesheet" href="../static/home.css">
+</head>
+<body>
+	<div class="header">
+		<section>
+			<h1 class="slogan">BIOINFORMATICS</h1>
+			<div class="ribbon">Indentifying antioxidant using Deeplearning
+				<i></i>
+				<i></i>
+				<i></i>
+				<i></i>
+			</div>
+		</section>
+	</div>
+	<div class="content-div">
+		<div class="form">
+			<form action = "/confirm" method = "POST">
+				<div class="hex">
+					<div class="text">
+						Input your Sequence
+					</div>
+				</div>
+				<div class="ribbon2">
+					<i></i>
+					<i></i>
+					<textarea class="seq" name="seq" placeholder="Example: MRSPSLAVAATTVLGLFSSSALAYYGNTTTVALTTTEFVTTCPYPTTFTVSTCTNDVCQPTVVTVTEETTITIPGTVVCPVVSTPSGS"></textarea>
+				</div>
+				<div class="labelemail">Enter your email so we can send it to you when the results are available!</div>
+				<div class="email" >
+					<input type="email" placeholder="abcd@1234" name="email">
+				</div>
+				<div class="sub">
+					<input type="submit" class="submit" value="Submit"/>
+					<input type="reset" class="clear" value="Clear">
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>
