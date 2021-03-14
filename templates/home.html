@@ -6,17 +6,7 @@
 	<link rel="stylesheet" href="../static/home.css">
 </head>
 <body>
-	<div class="header">
-		<section>
-			<h1 class="slogan">BIOINFORMATICS</h1>
-			<div class="ribbon">Indentifying antioxidant using Deeplearning
-				<i></i>
-				<i></i>
-				<i></i>
-				<i></i>
-			</div>
-		</section>
-	</div>
+	{% include 'header.html' %}
 	<div class="content-div">
 		<div class="form">
 			<form action = "/confirm" method = "POST">
