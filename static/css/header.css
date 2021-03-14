@@ -1,0 +1,86 @@
+.slogan {
+    letter-spacing: 15px;
+    margin: 70px auto 0px;
+    position: relative;
+    color: #fff;
+    font-size: 90px;
+    font-family: 'Agency FB', arial;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+    text-shadow: 2px 2px #617f73;
+}
+
+.ribbon {
+    width: 800px;
+    height: 40px;
+    margin: 1px auto 0px;
+    position: relative;
+    color: #fff;
+    font: 18px/40px sans-serif;
+    text-align: center;
+    text-transform: uppercase;
+    background: #B66958;
+
+    -webkit-animation: main 250ms;
+    -moz-animation: main 250ms;
+    -ms-animation: main 250ms;
+    animation: main 250ms;
+  }
+
+  .ribbon i {
+    position: absolute;
+  }
+
+  .ribbon i:first-child, .ribbon i:nth-child(2) {
+    position: absolute;
+    left: -20px;
+    bottom: -20px;
+    z-index: -1;
+    border: 20px solid transparent;
+    border-right-color: #774D43;
+
+    -webkit-animation: edge 500ms;
+    -moz-animation: edge 500ms;
+    -ms-animation: edge 500ms;
+    animation: edge 500ms;
+  }
+
+  .ribbon i:nth-child(2) {
+    left: auto;
+    right: -20px;
+    border-right-color: transparent;
+    border-left-color: #774D43;
+  }
+
+  .ribbon i:nth-child(3), .ribbon i:last-child {
+    width: 20px;
+    bottom: -20px;
+    left: -40px;
+    z-index: -2;
+    border: 20px solid #965D50;
+    border-left-color: transparent;
+
+    -webkit-animation: back 600ms;
+    -moz-animation: back 600ms;
+    -ms-animation: back 600ms;
+    animation: back 600ms;
+
+    -webkit-transform-origin: 100% 0;
+    -moz-transform-origin: 100% 0;
+    -ms-transform-origin: 100% 0;
+    transform-origin: 100% 0;
+  }
+
+  .ribbon i:last-child {
+    bottom: -20px;
+    left: auto;
+    right: -40px;
+    border: 20px solid #965D50;
+    border-right-color: transparent;
+
+    -webkit-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
+    -ms-transform-origin: 0 0;
+    transform-origin: 0 0;
+  }

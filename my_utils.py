@@ -77,8 +77,10 @@ def save_result_problem(fasta_seq, email, name, result):
     f_request.write(">result\n")
     if result == 1:
         f_request.write("Antioxidant")
-    else:
+    elif result == 0:
         f_request.write("Non-Antioxidant")
+    else:
+        f_request.write(result)
     f_request.close()
 
 
@@ -257,9 +259,13 @@ def preprocess(sequence):
 def process(sequence, email):
     name = create_file_name()
     save_request_problem(sequence, email, name)
-    pssm_path, bert_path = preprocess(sequence)
-    result = ensemble(pssm_path, bert_path)
-    save_result_problem(sequence, email, name, result)
+    try:
+        pssm_path, bert_path = preprocess(sequence)
+        result = ensemble(pssm_path, bert_path)
+        save_result_problem(sequence, email, name, result)
+    except Exception:
+        result = 'can\'t parse pssm from input sequence'
+        save_result_problem(sequence, email, name, result)
     return name
 
 

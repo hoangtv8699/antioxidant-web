@@ -3,23 +3,15 @@
 <head>
     <meta charset="utf-8">
 	<title>Home</title>
-	<link rel="stylesheet" href="../static/home.css">
+	<link rel="stylesheet" href="../static/css/home.css">
+	<link rel="stylesheet" href="../static/css/header.css">
+	<link href="https://allfont.net/allfont.css?fonts=agency-fb" rel="stylesheet" type="text/css" />
 </head>
 <body>
-	<div class="header">
-		<section>
-			<h1 class="slogan">BIOINFORMATICS</h1>
-			<div class="ribbon">Indentifying antioxidant using Deeplearning
-				<i></i>
-				<i></i>
-				<i></i>
-				<i></i>
-			</div>
-		</section>
-	</div>
+	{% include 'header.html' %}
 	<div class="content-div">
 		<div class="form">
-			<form action = "/confirm" method = "POST">
+			<form name="myForm" action="/confirm" onsubmit="return validateForm()" method = "POST">
 				<div class="hex">
 					<div class="text">
 						Input your Sequence
@@ -41,5 +33,25 @@
 			</form>
 		</div>
 	</div>
+	{% if result %}
+		<script>
+  			alert("We received your submit!\n we'll email you when the result is ready");
+		</script>
+	{% endif %}
+	<script>
+		function validateForm() {
+			var seq = document.forms["myForm"]["seq"].value;
+			var email = document.forms["myForm"]["email"].value;
+			var seq_reg = /^[A|V|I|L|M|F|Y|W|S|T|N|Q|C|U|G|P|R|H|K|D|E]+$/;
+			if (email == "" | seq == "") {
+				alert("All input must be filled!");
+				return false;
+			}
+			if (!seq_reg.test(seq)) {
+				alert("Invalid protein sequences!");
+				return false;
+			}
+		}
+	</script>
 </body>
 </html>

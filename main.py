@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, current_app
+from flask import Flask, request, render_template, current_app, abort
 
 app = Flask(__name__)
 app.config['SERVER_NAME'] = '127.0.0.1:5000'
@@ -9,7 +9,7 @@ from process_theads import ProcessThread
 
 @app.route("/")
 def index():
-    return render_template("problem.html")
+    return render_template("home.html")
 
 
 @app.route("/confirm", methods=['GET', 'POST'])
@@ -22,26 +22,16 @@ def confirm():
         Thread = ProcessThread(fasta_seq, email)
         Thread.start()
 
-        str_result = "Email: " + email
-        str_result += "<br>FASTA sequence: " + fasta_seq
-
-        str_result = "We have received your request: <br><br> " + str_result
-        str_result += "<br><br>We will send you the result one your job is finished."
-        str_result += "<br> Press Back for other request!"
-
-        return str_result
+        return render_template("home.html", result=True)
 
 
 @app.route("/result/<filename>")
 def result(filename):
     response_status, result_dict = my_utils.read_response_problem(filename)
     if not response_status:
-        return "your result not yet calculated!"
-
-    str_result = "Your email: " + result_dict['email']
-    str_result += "<br>Your FASTA sequence: " + result_dict['seq']
-    str_result += "<br>Your result: " + result_dict['result']
-    return str_result
+        abort(404)
+    return render_template("result.html", email=result_dict['email'],
+                           seq=result_dict['seq'], result=result_dict['result'])
 
 
 if __name__ == "__main__":
