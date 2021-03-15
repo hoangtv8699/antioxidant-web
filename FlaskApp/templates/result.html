@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>result</title>
+    <link rel="stylesheet" href="../static/css/resultss.css">
+    <link rel="stylesheet" href="../static/css/header.css">
+	<link href="https://allfont.net/allfont.css?fonts=agency-fb" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    {% include 'header.html' %}
+	<div class="content-div">
+		<div class="form">
+			<form name="myForm" action="/confirm" onsubmit="return validateForm()" method = "POST">
+				<div class="hex">
+					<div class="text">
+						Your Result
+					</div>
+				</div>
+				<div class="ribbon2">
+					<i></i>
+					<i></i>
+					<div class="resulttext">
+						Your email: {{ email }}
+						<br/>
+						Your sequence: {{ seq }}
+						<br/>
+						Your result: {{ result }}
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

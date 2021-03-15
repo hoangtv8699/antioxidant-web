@@ -1,0 +1,17 @@
+● apache2.service - The Apache HTTP Server
+   Loaded: loaded (/lib/systemd/system/apache2.service; enabled; vendor preset: enabled)
+  Drop-In: /lib/systemd/system/apache2.service.d
+           └─apache2-systemd.conf
+   Active: failed (Result: exit-code) since Wed 2019-06-12 21:17:09 +07; 35s ago
+  Process: 9960 ExecStop=/usr/sbin/apachectl stop (code=exited, status=1/FAILURE)
+  Process: 9592 ExecReload=/usr/sbin/apachectl graceful (code=exited, status=0/SUCCESS)
+  Process: 11466 ExecStart=/usr/sbin/apachectl start (code=exited, status=1/FAILURE)
+ Main PID: 9825 (code=exited, status=0/SUCCESS)
+
+Jun 12 21:17:09 ctr507235 systemd[1]: Starting The Apache HTTP Server...
+Jun 12 21:17:09 ctr507235 apachectl[11466]: apache2: Syntax error on line 146 of /etc/apache2/apache2.conf: Syntax error on line 1 of /etc/apache2/mods-enabled/wsgi.load: Cannot load /usr/lib/apache2/modules/mod_wsgi.so into server: /usr/lib/apache2/modules/mod_wsgi.so: cannot open shared object file: No such file or directory
+Jun 12 21:17:09 ctr507235 apachectl[11466]: Action 'start' failed.
+Jun 12 21:17:09 ctr507235 apachectl[11466]: The Apache error log may have more information.
+Jun 12 21:17:09 ctr507235 systemd[1]: apache2.service: Control process exited, code=exited status=1
+Jun 12 21:17:09 ctr507235 systemd[1]: apache2.service: Failed with result 'exit-code'.
+Jun 12 21:17:09 ctr507235 systemd[1]: Failed to start The Apache HTTP Server.
