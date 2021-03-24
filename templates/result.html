@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>result</title>
+    <link rel="stylesheet" href="../static/css/result.css">
+    <link rel="stylesheet" href="../static/css/header.css">
+	<link href="https://allfont.net/allfont.css?fonts=agency-fb" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    {% include 'header.html' %}
+	<div class="content-div">
+		<div class="form">
+			<form name="myForm" action="/confirm" onsubmit="return validateForm()" method = "POST">
+				<div class="hex">
+					<div class="text">
+						Your Result
+					</div>
+				</div>
+				<div class="ribbon2">
+					<i></i>
+					<i></i>
+					<div class="resulttext">
+						{% if seq %}
+							Sequence: {{ result['seq'] }}
+							<br/>
+							<table>
+								<tr>
+									<td>10 fold predict:</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>- fold 0:</td>
+									<td>{{ result['10fold']['fold0'] }}</td>
+								</tr>
+								<tr>
+									<td>- fold 1:</td>
+									<td>{{ result['10fold']['fold1'] }}</td>
+								</tr>
+								<tr>
+									<td>- fold 2:</td>
+									<td>{{ result['10fold']['fold2'] }}</td>
+								</tr>
+								<tr>
+									<td>- fold 3:</td>
+									<td>{{ result['10fold']['fold3'] }}</td>
+								</tr>
+								<tr>
+									<td>- fold 4:</td>
+									<td>{{ result['10fold']['fold4'] }}</td>
+								</tr>
+								<tr>
+									<td>- fold 5:</td>
+									<td>{{ result['10fold']['fold5'] }}</td>
+								</tr>
+								<tr>
+									<td>- fold 6:</td>
+									<td>{{ result['10fold']['fold6'] }}</td>
+								</tr>
+								<tr>
+									<td>- fold 7:</td>
+									<td>{{ result['10fold']['fold7'] }}</td>
+								</tr>
+								<tr>
+									<td>- fold 8:</td>
+									<td>{{ result['10fold']['fold8'] }}</td>
+								</tr>
+								<tr>
+									<td>- fold 9:</td>
+									<td>{{ result['10fold']['fold9'] }}</td>
+								</tr>
+								<tr>
+									<td>Voting 10 fold:</td>
+									<td>{{ result['voting'] }}</td>
+								</tr>
+								<tr>
+									<td>Random Forest predict:</td>
+									<td> {{ result['RF'] }}</td>
+								</tr>
+								<tr>
+									<td>Ensemble result:</td>
+									<td>{{ result['ensemble'] }}</td>
+								</tr>
+								<tr>
+									<td>Final result:</td>
+									<td>{{ result['label'] }}</td>
+								</tr>
+							</table>
+						{% endif %}
+						<br>
+						<a href="{{ url_for('download', filename=name) }}">Download your full result with PSSM here!</a>
+						
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

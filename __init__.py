@@ -1,6 +1,8 @@
-from flask import Flask, request, render_template, current_app
+from flask import Flask, request, render_template, current_app, send_from_directory
 import utils
 import time
+import json
+
 app = Flask(__name__)
 
 
@@ -22,14 +24,22 @@ def result():
             fasta = request.files['fasta']
             name = utils.save_fasta(fasta)
             if not name:
-                return False
+                return render_template("home.html", alert=True)
 
-    utils.transfer(name)
+    if utils.transfer(name):
+        with open(utils.DIR_RESPONSES + name + '.json') as json_file:
+            data = json.load(json_file)
+        if sub_type == 'Sequence':
+            data = data[0]
+            data['10fold'] = utils.floor_10fold(data['10fold'])
+            return render_template("result.html", seq=True, result=data, name=name)
+        elif sub_type == 'Fasta':
+            return render_template("result.html", seq=False, name=name)
 
-    # str_result = "Your email: " + result_dict['email']
-    # str_result += "<br>Your FASTA sequence: " + result_dict['seq']
-    # str_result += "<br>Your result: " + result_dict['result']
-    return "Hello world!"
+
+@app.route("/download/<filename>")
+def download(filename):
+    return send_from_directory(utils.DIR_RESPONSES, filename + '.json', as_attachment=True)
 
 
 if __name__ == "__main__":

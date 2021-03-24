@@ -2,6 +2,7 @@ import pysftp
 import time
 import datetime
 import os
+import math
 from Bio import SeqIO
 
 DIR_REQUESTS = 'requests/'
@@ -13,13 +14,13 @@ DIR_REMOTE_REQUESTS = 'Antioxidant_API/data/fasta/'
 
 def create_file_name():
     currentDT = datetime.datetime.now()
-    print("Current Year is: %d" % currentDT.year)
-    print("Current Month is: %d" % currentDT.month)
-    print("Current Day is: %d" % currentDT.day)
-    print("Current Hour is: %d" % currentDT.hour)
-    print("Current Minute is: %d" % currentDT.minute)
-    print("Current Second is: %d" % currentDT.second)
-    print("Current Microsecond is: %d" % currentDT.microsecond)
+    # print("Current Year is: %d" % currentDT.year)
+    # print("Current Month is: %d" % currentDT.month)
+    # print("Current Day is: %d" % currentDT.day)
+    # print("Current Hour is: %d" % currentDT.hour)
+    # print("Current Minute is: %d" % currentDT.minute)
+    # print("Current Second is: %d" % currentDT.second)
+    # print("Current Microsecond is: %d" % currentDT.microsecond)
 
     result = str(currentDT.year) + "_" + str(currentDT.month) + "_" + str(currentDT.day) + "__" \
              + str(currentDT.hour) + "_" + str(currentDT.minute) + "_" + str(currentDT.second)
@@ -41,10 +42,9 @@ def transfer(filename):
             sftp.get(DIR_REMOTE_RESPONSES + filename + '.json', DIR_RESPONSES + filename + '.json')
             sftp.remove(DIR_REMOTE_RESPONSES + filename + '.json')
         sftp.close()
-        print('Succeed')
+        return True
     except Exception as e:
-        print(e)
-        print('Error connect sfth Irdeto')
+        return False
 
 
 def save_seq(seq):
@@ -67,7 +67,17 @@ def save_fasta(fasta_file):
 
 
 def check_fasta(filename):
-    file_path = DIR_REQUESTS + filename + '.fasta'
-    with open(file_path, "r") as handle:
-        fasta = SeqIO.parse(handle, "fasta")
-        return any(fasta)
+    try:
+        file_path = DIR_REQUESTS + filename + '.fasta'
+        with open(file_path, "r") as handle:
+            fasta = SeqIO.parse(handle, "fasta")
+            return any(fasta)
+    except:
+        return False
+
+
+def floor_10fold(fold):
+    for key, value in fold.items():
+        value[0] = math.floor(value[0] * 1000) / 1000
+        value[1] = math.floor(value[1] * 1000) / 1000
+    return fold

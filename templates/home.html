@@ -3,13 +3,14 @@
 <head>
     <meta charset="utf-8">
 	<title>Home</title>
-	<link rel="stylesheet" href="../static/home.css">
+	<link rel="stylesheet" href="../static/css/home.css">
+	<link rel="stylesheet" href="../static/css/header.css">
 </head>
 <body>
 	{% include 'header.html' %}
 	<div class="content-div">
 		<div class="form">
-			<form action = "/predict" method = "POST" enctype = "multipart/form-data">
+			<form action = "/predict" method="POST" enctype = "multipart/form-data" name="myForm" onsubmit="return loader()">
 				<div class="hex">
 					<div class="text">
 						Input your Sequence
@@ -30,16 +31,16 @@
 				</div>
 				<div class="radio" id="radio">
 					<label class="container">Sequence
-					<input type="radio" checked="checked" name="radio" value="Sequence">
+					<input type="radio" checked="checked" name="radio" value="Sequence" id="Sequence">
 					<span class="checkmark"></span>
 					</label>
 					<label class="container">Fasta
-					<input type="radio" name="radio" value="Fasta">
+					<input type="radio" name="radio" value="Fasta" id="Fasta" >
 					<span class="checkmark"></span>
 					</label>
 				</div>	
 				<div class="sub" id="sub">
-					<input type="submit" class="submit" value="Submit" onclick="loader()"/>
+					<input type="submit" class="submit" value="Submit"/>
 					<input type="reset" class="clear" value="Clear">
 				</div>
 				<!-- MUTLI SPINNER -->
@@ -55,6 +56,11 @@
 			</form>
 		</div>
 	</div>
+	{% if alert %}
+		<script>
+  			alert("Your file not in Fasta format!");
+		</script>
+	{% endif %}
 	<script>
 		var input = document.getElementById('file-upload');
 		var infoArea = document.getElementById('filename');
@@ -68,6 +74,23 @@
 		}
 
 		function loader(){
+			if(document.getElementById("Sequence").checked){
+				var seq = document.forms["myForm"]["seq"].value;
+				var seq_reg = /^[A|V|I|L|M|F|Y|W|S|T|N|Q|C|U|G|P|R|H|K|D|E]+$/;
+				if (seq == "") {
+					alert("Fasta sequence must be filled!");
+					return false;
+				}
+				if (!seq_reg.test(seq)) {
+					alert("Invalid protein sequences!");
+					return false;
+				}
+			}else{
+				if(document.getElementById("file-upload").value == "") {
+					alert("Please input fasta file!")
+					return false;
+				}
+			}
 			var x = document.getElementById("loader-container");
 			x.style.display = "block";
 			var y = document.getElementById("sub");
