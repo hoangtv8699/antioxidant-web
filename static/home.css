@@ -89,7 +89,7 @@ body {
   }
 
   .content-div {
-      margin-top: 200px;
+      margin-top: 150px;
       align-items: center;
   }
 
@@ -227,52 +227,128 @@ body {
     opacity: 0.6;
   }
 
-  .labelemail {
+  .labelfile {
     margin-top: 25px;
     font-weight: bold;
     font: 25px sans-serif;
     color: #446559;
   }
 
-  .email {
+  .file {
     padding: 12px 20px;
-    height: 35px;
+    height: 50px;
     width: 95%;
     margin-top: 15px;
-    background-color: #B56858;
+    background-color: #cc8388;
+  }
+ 
+
+  .inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
   }
 
-  .email input {
+  .file label{
+    cursor: pointer;
+    margin: auto;
+    height: 30px;
+    width: 400px;
+    text-align: center;
+    border: 1px solid #DF474D;
+    display: table;
+  }
+
+  .file label span {
+    padding: 12px;
+    text-align: center;
+    font-size: 17px;
+    margin: 0;
+    color: #DF474D;
+    background-color: white;
+    display: table-cell;
+  }
+
+  .file label strong {
+    padding: 12px;
+    text-align: center;
+    font-size: 17px;
+    margin: 0;
+    color: white;
+    background-color: #DF474D;
+    display: table-cell;
+  }
+
+  label strong:focus,
+  label strong:hover {
+      background-color: #722040;
+  } 
+
+  .radio {
+    text-align: center;
+  }
+
+  .container {
+    color: #49685D;
+    margin: 15px;
+    display: inline-block;
+    position: relative;
+    padding-left: 25px;
+    cursor: pointer;
+    font-size: 20px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+    border-radius: 50%;
+  }
+
+  .container:hover input ~ .checkmark {
+    background-color: #ccc;
+  }
+
+  .container input:checked ~ .checkmark {
+    background-color: #446559;
+  }
+
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  .container input:checked ~ .checkmark:after {
     display: block;
-    color: white;
-    margin-right: auto;
-    margin-left: auto;
-    width: 50%;
-    font-family: Tahoma, sans-serif;
-    font: 17px sans-serif;
-    border-radius: 5px;
-    padding: 5px;
-    border: 2px solid #965D50;
-    background-color: #B56858;
   }
 
-  .email input:focus{
-    box-shadow:  0px 0px 8px #BFD7CE;
-    outline: none;
-  }
-
-  .email input:hover{
-    box-shadow:  0px 0px 8px #BFD7CE;
-    outline: none;
-  }
-
-  .email input::placeholder {
-    color: white;
-    opacity: 0.6;
+  .container .checkmark:after {
+    top: 6.5px;
+    left: 6.5px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: white;
   }
 
   .sub {
-    margin-top: 10px;
     text-align: center;
   }
   
@@ -315,3 +391,29 @@ body {
     background-color: #fff;
   }
 
+  /* MULTI SPINNER */
+
+  #loader-container {
+    margin-top: 60px;
+    display: none;
+    width: 100px;
+    height: 100px;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+  }
+
+  .loader-div {
+    width: calc(100% - 16px);
+    height: calc(100% - 16px);
+    border: 8px solid #BFD7CE;
+    border-top: 8px solid #446559;
+    border-radius: 50%;
+    animation: rotate 5s linear infinite;
+  }
+
+  @keyframes rotate {
+    100% { transform: rotate(360deg);}
+  }

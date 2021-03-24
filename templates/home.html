@@ -9,7 +9,7 @@
 	{% include 'header.html' %}
 	<div class="content-div">
 		<div class="form">
-			<form action = "/confirm" method = "POST">
+			<form action = "/predict" method = "POST" enctype = "multipart/form-data">
 				<div class="hex">
 					<div class="text">
 						Input your Sequence
@@ -20,16 +20,61 @@
 					<i></i>
 					<textarea class="seq" name="seq" placeholder="Example: MRSPSLAVAATTVLGLFSSSALAYYGNTTTVALTTTEFVTTCPYPTTFTVSTCTNDVCQPTVVTVTEETTITIPGTVVCPVVSTPSGS"></textarea>
 				</div>
-				<div class="labelemail">Enter your email so we can send it to you when the results are available!</div>
-				<div class="email" >
-					<input type="email" placeholder="abcd@1234" name="email">
+				<div class="labelfile">Or submit fasta file!</div>
+				<div class="file">
+					<input type="file" name="fasta" id="file-upload" class="inputfile"/>
+					<label for="file-upload">
+						<span id="filename">No file chosen...</span>
+						<strong>Choose fasta file!</strong>
+					</label>
 				</div>
-				<div class="sub">
-					<input type="submit" class="submit" value="Submit"/>
+				<div class="radio" id="radio">
+					<label class="container">Sequence
+					<input type="radio" checked="checked" name="radio" value="Sequence">
+					<span class="checkmark"></span>
+					</label>
+					<label class="container">Fasta
+					<input type="radio" name="radio" value="Fasta">
+					<span class="checkmark"></span>
+					</label>
+				</div>	
+				<div class="sub" id="sub">
+					<input type="submit" class="submit" value="Submit" onclick="loader()"/>
 					<input type="reset" class="clear" value="Clear">
+				</div>
+				<!-- MUTLI SPINNER -->
+				<div id="loader-container">
+					<div class="loader-div">
+						<div class="loader-div">
+							<div class="loader-div">
+							
+							</div>
+						</div>
+					</div>
 				</div>
 			</form>
 		</div>
 	</div>
+	<script>
+		var input = document.getElementById('file-upload');
+		var infoArea = document.getElementById('filename');
+
+		input.addEventListener( 'change', showFileName );
+
+		function showFileName( event ) {
+			var input = event.srcElement;
+			var fileName = input.files[0].name;
+			infoArea.textContent = fileName;
+		}
+
+		function loader(){
+			var x = document.getElementById("loader-container");
+			x.style.display = "block";
+			var y = document.getElementById("sub");
+			y.style.display = "none";
+			var z = document.getElementById("radio");
+			z.style.display = "none";
+		}
+	</script>
 </body>
 </html>
