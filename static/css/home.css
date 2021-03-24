@@ -186,6 +186,7 @@ body {
     color: #633024;
     background-color: white;
     display: table-cell;
+    font-weight: 700;
   }
 
   .file label strong {
@@ -196,6 +197,7 @@ body {
     color: white;
     background-color: #633024;
     display: table-cell;
+    font-weight: 700;
   }
 
   label strong:focus,
