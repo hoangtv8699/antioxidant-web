@@ -11,7 +11,7 @@ body {
 
   .form {
       margin: auto;
-      width: 50%;
+      width: 75%;
   }
 
   .hex {
@@ -61,7 +61,7 @@ body {
 
   .ribbon2 {
     width: 100%;
-    height: 120px;
+    height: 170px;
     z-index: 0;
     /* margin: 1px auto 0px; */
     position: relative;
@@ -86,7 +86,7 @@ body {
     position: absolute;
     right: 0px;
     z-index: 1;
-    border: 60px solid transparent;
+    border: 85px solid transparent;
     border-right-color: #749E8E;
     
     -webkit-animation: edge 500ms;
@@ -97,11 +97,11 @@ body {
   
   .ribbon2 i:nth-child(2) {
     width: 130px;
-    bottom: -60px;
+    bottom: -85px;
     left: auto;
-    right: -190px;
+    right: -215px;
     z-index: 2;
-    border: 60px solid #446559;
+    border: 85px solid #446559;
     border-right-color: transparent;
     
     -webkit-animation: back 600ms;
@@ -117,7 +117,7 @@ body {
 
   .seq {
     margin-top: 10px;
-    height: 90px;
+    height: 135px;
     width: 70%;
     font-family: Tahoma, sans-serif;
     font: 20px sans-serif;
@@ -144,7 +144,7 @@ body {
   }
 
   .labelfile {
-    margin-top: 25px;
+    margin-top: 50px;
     font-weight: bold;
     font: 25px sans-serif;
     color: #446559;

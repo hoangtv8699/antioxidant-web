@@ -8,7 +8,7 @@
 
   .form {
       margin: auto;
-      width: 50%;
+      width: 75%;
   }
 
   .hex {
@@ -119,6 +119,6 @@
     font: 18px sans-serif;
     margin-left: 130px;
     padding: 10px;
-    overflow:hidden;
+    overflow-wrap: break-word;
     line-height: 20px;
   }
