@@ -4,3 +4,4 @@ biopython
 matplotlib
 flask
 Flask-Mail
+pysftp

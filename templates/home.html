@@ -13,28 +13,28 @@
 			<form action = "/predict" method="POST" enctype = "multipart/form-data" name="myForm" onsubmit="return loader()">
 				<div class="hex">
 					<div class="text">
-						Input your Sequence
+						Input Your FASTA Sequence
 					</div>
 				</div>
 				<div class="ribbon2">
 					<i></i>
 					<i></i>
-					<textarea class="seq" name="seq" placeholder="Example: MRSPSLAVAATTVLGLFSSSALAYYGNTTTVALTTTEFVTTCPYPTTFTVSTCTNDVCQPTVVTVTEETTITIPGTVVCPVVSTPSGS"></textarea>
+					<textarea class="seq" name="seq" placeholder=""></textarea>
 				</div>
 				<div class="labelfile">Or submit fasta file!</div>
 				<div class="file">
 					<input type="file" name="fasta" id="file-upload" class="inputfile"/>
 					<label for="file-upload">
 						<span id="filename">No file chosen...</span>
-						<strong>Choose fasta file!</strong>
+						<strong>Choose FASTA file!</strong>
 					</label>
 				</div>
 				<div class="radio" id="radio">
-					<label class="container">Sequence
+					<label class="container">FASTA Sequence
 					<input type="radio" checked="checked" name="radio" value="Sequence" id="Sequence">
 					<span class="checkmark"></span>
 					</label>
-					<label class="container">Fasta
+					<label class="container">FASTA file
 					<input type="radio" name="radio" value="Fasta" id="Fasta" >
 					<span class="checkmark"></span>
 					</label>
@@ -53,6 +53,41 @@
 						</div>
 					</div>
 				</div>
+				<p class="examplelabel">Examples of FASTA sequence:</p>
+				<p class="example">
+					<b>Antioxidant</b>
+					<br>
+					<span>
+						>P1
+						<br>
+						MTKGILLGDKFPDFRAETNEGFIPSFYDWIGKDSWAILFSHPRDFTPV
+						<br>
+						CTTELARLVQLAPEFNKRNVKLIGLSCDSAESHRKWVDDIMAVCKMKC
+						<br>
+						NDGDTCCSGNKLPFPIIADENRFLATELGMMDPDERDENGNALTARCV
+						<br>
+						FIIGPEKTLKLSILYPATTGRNFDEILRVVDSLQLTAVKLVATPVDWK
+						<br>
+						DGDDCVVLPTIDDTEAKKLFGEKINTIELPSGKHYLRMVAHPK
+					</span>
+				</p>
+				<p class="example">
+					<b>Non-Antioxidant</b>
+					<br>
+					<span>
+						>P1
+						<br>
+						MTKGILLGDKFPDFRAETNEGFIPSFYDWIGKDSWAILFSHPRDFTPV
+						<br>
+						CTTELARLVQLAPEFNKRNVKLIGLSCDSAESHRKWVDDIMAVCKMKC
+						<br>
+						NDGDTCCSGNKLPFPIIADENRFLATELGMMDPDERDENGNALTARCV
+						<br>
+						FIIGPEKTLKLSILYPATTGRNFDEILRVVDSLQLTAVKLVATPVDWK
+						<br>
+						DGDDCVVLPTIDDTEAKKLFGEKINTIELPSGKHYLRMVAHPK
+					</span>
+				</p>
 			</form>
 		</div>
 	</div>
@@ -75,10 +110,20 @@
 
 		function loader(){
 			if(document.getElementById("Sequence").checked){
-				var seq = document.forms["myForm"]["seq"].value;
+				var lines = document.forms["myForm"]["seq"].value.split("\n");
+				var seq_id = lines[0]
+				var seq = ""
+				for(var i = 1; i < lines.length; i++){
+					seq = seq.concat(lines[i])
+				}
+				var id_reg = /^>{1}./
 				var seq_reg = /^[A|V|I|L|M|F|Y|W|S|T|N|Q|C|U|G|P|R|H|K|D|E]+$/;
 				if (seq == "") {
 					alert("Fasta sequence must be filled!");
+					return false;
+				}
+				if (!id_reg.test(seq_id)) {
+					alert("Invalid FASTA sequences format!");
 					return false;
 				}
 				if (!seq_reg.test(seq)) {

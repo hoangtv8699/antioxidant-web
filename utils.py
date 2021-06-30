@@ -51,7 +51,6 @@ def save_seq(seq):
     file_name = create_file_name()
     file_path = DIR_REQUESTS + file_name + '.fasta'
     f_request = open(file_path, "w")
-    f_request.write(">seq\n")
     f_request.write(seq)
     f_request.close()
     return file_name

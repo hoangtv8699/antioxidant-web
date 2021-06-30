@@ -335,3 +335,26 @@ body {
   @keyframes rotate {
     100% { transform: rotate(360deg);}
   }
+
+  /* example sequences */
+  .examplelabel {
+    margin-top: 25px;
+    font: 20px sans-serif;
+    font-weight: bold;
+    color: #446559;
+  }
+
+  .example {
+    margin-top: 15px;
+    font: 18px sans-serif;
+    color: #446559;
+    font-family: monospace;
+  }
+
+  .example span {
+    margin-top: 10px;
+    display:inline-block;
+  }
+  
+  
+ 
