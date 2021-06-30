@@ -5,6 +5,7 @@
 	<title>Home</title>
 	<link rel="stylesheet" href="../static/css/home.css">
 	<link rel="stylesheet" href="../static/css/header.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
 </head>
 <body>
 	{% include 'header.html' %}
@@ -55,7 +56,9 @@
 				</div>
 			</form>
 		</div>
+		{% include 'footer.html' %}
 	</div>
+	
 	{% if alert %}
 		<script>
   			alert("Your file not in Fasta format!");

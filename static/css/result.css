@@ -1,9 +1,11 @@
   body {
     background-image: url(../image/final.png);
+    margin: 0;
   }
   .content-div {
     margin-top: 100px;
     align-items: center;
+    margin-bottom: 140px;
   }
 
   .form {
