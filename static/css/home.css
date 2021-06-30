@@ -1,5 +1,6 @@
 body {
   background-image: url(../image/final.png);
+  margin: 0;
 }
 
 
@@ -7,6 +8,7 @@ body {
   .content-div {
       margin-top: 150px;
       align-items: center;
+      position: relative;
   }
 
   .form {
